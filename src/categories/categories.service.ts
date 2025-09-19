@@ -20,7 +20,10 @@ export class CategoriesService {
   }
 
   async findAll() {
-    return this.categoryRepo.find({ relations: ['products'] });
+    // Return categories with a computed productCount field
+    const qb = this.categoryRepo.createQueryBuilder('category');
+    qb.loadRelationCountAndMap('category.productCount', 'category.products');
+    return qb.getMany();
   }
 
   async findOne(id: number) {
@@ -40,7 +43,8 @@ export class CategoriesService {
     const category = await this.categoryRepo.findOne({ where: { id }, relations: ['products'] });
     if (!category) throw new NotFoundException('Category not found');
     if (category.products && category.products.length > 0) {
-      throw new BadRequestException('Cannot delete category with linked products');
+      // Respond with 409 Conflict when linked products exist
+      throw new ConflictException('Cannot delete category with linked products');
     }
     await this.categoryRepo.remove(category);
     return { message: 'Category deleted' };
