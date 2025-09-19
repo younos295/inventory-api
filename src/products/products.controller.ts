@@ -36,8 +36,10 @@ export class ProductsController {
   @UseGuards(AuthGuard('jwt'))
   @Get('search')
   @ApiQuery({ name: 'q', required: true, type: String })
-  search(@Query('q') q: string) {
-    return this.productsService.search(q);
+  @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
+  search(@Query() query: any) {
+    return this.productsService.search(query);
   }
 
   @UseGuards(AuthGuard('jwt'))

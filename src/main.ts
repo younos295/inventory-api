@@ -21,6 +21,6 @@ async function bootstrap() {
   // Serve Swagger at /api/docs (respects the global prefix)
   SwaggerModule.setup('docs', app, document, { useGlobalPrefix: true });
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 8080);
 }
 bootstrap();

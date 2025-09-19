@@ -61,14 +61,19 @@ export class ProductsService {
     return { message: 'Product deleted' };
   }
 
-  async search(q: string) {
+  async search(query: any) {
+    const { q, page = 1, limit = 10 } = query;
     if (!q) return [];
-      return this.productRepo.find({
-        where: [
-          { name: ILike(`%${q}%`) },
-          { description: ILike(`%${q}%`) },
-        ],
-        relations: ['category'],
-      });
+    const pageNum = Number(page) || 1;
+    const limitNum = Number(limit) || 10;
+    return this.productRepo.find({
+      where: [
+        { name: ILike(`%${q}%`) },
+        { description: ILike(`%${q}%`) },
+      ],
+      relations: ['category'],
+      skip: (pageNum - 1) * limitNum,
+      take: limitNum,
+    });
   }
 }
