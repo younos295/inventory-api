@@ -5,6 +5,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, ApiUnauthorizedResponse, ApiForbiddenResponse, ApiNotFoundResponse, ApiBadRequestResponse, ApiQuery } from '@nestjs/swagger';
+import { SuccessMessage } from '../common/decorators/success-message.decorator';
 
 @ApiTags('products')
 @ApiBearerAuth()
@@ -18,6 +19,7 @@ export class ProductsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
+  @SuccessMessage('Product created successfully')
   create(@Body() dto: CreateProductDto) {
     return this.productsService.create(dto);
   }
@@ -29,6 +31,7 @@ export class ProductsController {
   @ApiQuery({ name: 'maxPrice', required: false, type: Number })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
+  @SuccessMessage('Products fetched successfully')
   findAll(@Query() query: any) {
     return this.productsService.findAll(query);
   }
@@ -38,24 +41,28 @@ export class ProductsController {
   @ApiQuery({ name: 'q', required: true, type: String })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
+  @SuccessMessage('Products search results fetched successfully')
   search(@Query() query: any) {
     return this.productsService.search(query);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
+  @SuccessMessage('Product fetched successfully')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.findOne(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
+  @SuccessMessage('Product updated successfully')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProductDto) {
     return this.productsService.update(id, dto);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
+  @SuccessMessage('Product deleted successfully')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.productsService.remove(id);
   }

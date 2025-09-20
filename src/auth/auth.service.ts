@@ -18,12 +18,32 @@ export class AuthService {
   ) {}
 
   async register(dto: RegisterDto) {
-    const exists = await this.userRepo.findOne({ where: { email: dto.email } });
-    if (exists) throw new ConflictException('Email already registered');
+    const byEmail = await this.userRepo.findOne({ where: { email: dto.email } });
+    if (byEmail) throw new ConflictException('Email already registered');
+    const byUsername = await this.userRepo.findOne({ where: { username: dto.username } });
+    if (byUsername) throw new ConflictException('Username already taken');
     const hash = await bcrypt.hash(dto.password, 10);
     const user = this.userRepo.create({ ...dto, password: hash });
-    await this.userRepo.save(user);
-    return { message: 'User registered successfully' };
+    // In case of a race condition, saving may still throw a unique constraint error.
+    try {
+      await this.userRepo.save(user);
+    } catch (err: any) {
+      // Postgres unique violation
+      if (err && (err.code === '23505' || err?.driverError?.code === '23505')) {
+        const detail: string | undefined = err.detail || err?.driverError?.detail;
+        if (detail?.includes('(email)')) {
+          throw new ConflictException('Email already registered');
+        }
+        if (detail?.includes('(username)')) {
+          throw new ConflictException('Username already taken');
+        }
+        throw new ConflictException('Duplicate value');
+      }
+      throw err;
+    }
+    // Return safe public fields so interceptor wraps meaningful data
+    const { id, email, username } = user;
+    return { id, email, username };
   }
 
   async login(dto: LoginDto) {

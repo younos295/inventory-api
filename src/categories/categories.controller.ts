@@ -5,6 +5,7 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags, ApiUnauthorizedResponse, ApiForbiddenResponse, ApiConflictResponse } from '@nestjs/swagger';
+import { SuccessMessage } from '../common/decorators/success-message.decorator';
 
 @ApiTags('categories')
 @ApiBearerAuth()
@@ -17,30 +18,35 @@ export class CategoriesController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
+  @SuccessMessage('Category created successfully')
   create(@Body() dto: CreateCategoryDto) {
     return this.categoriesService.create(dto);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get()
+  @SuccessMessage('Categories fetched successfully')
   findAll() {
     return this.categoriesService.findAll();
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':id')
+  @SuccessMessage('Category fetched successfully')
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.findOne(id);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
+  @SuccessMessage('Category updated successfully')
   update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateCategoryDto) {
     return this.categoriesService.update(id, dto);
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Delete(':id')
+  @SuccessMessage('Category deleted successfully')
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.categoriesService.remove(id);
   }
