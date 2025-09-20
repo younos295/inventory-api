@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: inventory-api
+    env: node
+    buildCommand: "npm install --include=dev && npm run build"
+    startCommand: "npm run start:prod"
+    autoDeploy: true

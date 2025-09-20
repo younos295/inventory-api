@@ -12,16 +12,27 @@ import { Product } from './products/product.entity';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      // When running on Render or in production, rely solely on environment variables
+      // provided by the platform (do not read local .env files).
+      ignoreEnvFile: process.env.NODE_ENV === 'production' || process.env.RENDER === 'true',
+      envFilePath: process.env.NODE_ENV === 'production' ? '.env.production' : '.env',
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: parseInt(process.env.DB_PORT ?? '5432', 10),
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_DATABASE,
+      ...(process.env.DATABASE_URL
+        ? { url: process.env.DATABASE_URL }
+        : {
+            host: process.env.DB_HOST,
+            port: parseInt(process.env.DB_PORT ?? '5432', 10),
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_DATABASE,
+          }),
       entities: [User, Category, Product],
-      synchronize: true, // Set to false in production
+      synchronize: process.env.NODE_ENV !== 'production',
+      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
     }),
     AuthModule,
     CategoriesModule,
@@ -31,3 +42,5 @@ import { Product } from './products/product.entity';
   providers: [AppService],
 })
 export class AppModule {}
+
+
