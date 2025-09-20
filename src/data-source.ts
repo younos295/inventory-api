@@ -1,12 +1,17 @@
 import 'reflect-metadata';
+import * as dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 import { User } from './auth/user.entity';
 import { Category } from './categories/category.entity';
 import { Product } from './products/product.entity';
 
-const isProd = process.env.NODE_ENV === 'production' || process.env.RENDER === 'true';
+const isProd = process.env.NODE_ENV === 'production';
+// Ensure env vars are loaded when running TypeORM CLI directly (local/dev only)
+if (!isProd) {
+  dotenv.config({ path: '.env' });
+}
 
-export const AppDataSource = new DataSource({
+const AppDataSource = new DataSource({
   type: 'postgres',
   ...(process.env.DATABASE_URL
     ? { url: process.env.DATABASE_URL }

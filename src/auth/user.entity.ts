@@ -13,4 +13,8 @@ export class User {
 
   @Column()
   password: string;
+
+  // Stores a hash of the latest refresh token for token rotation and revocation
+  @Column({ type: 'varchar', nullable: true })
+  refreshTokenHash?: string | null;
 }

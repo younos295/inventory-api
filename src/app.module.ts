@@ -14,9 +14,9 @@ import { Product } from './products/product.entity';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      // When running on Render or in production, rely solely on environment variables
-      // provided by the platform (do not read local .env files).
-      ignoreEnvFile: process.env.NODE_ENV === 'production' || process.env.RENDER === 'true',
+      // In production (Render), rely solely on environment variables provided by the platform
+      // (do not read local .env files).
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
       envFilePath: process.env.NODE_ENV === 'production' ? '.env.production' : '.env',
     }),
     TypeOrmModule.forRoot({
