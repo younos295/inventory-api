@@ -99,8 +99,6 @@ Swagger UI is available at: `http://localhost:8080/api/docs`
 
 - **Backend (Render):** https://inventory-api-9nao.onrender.com/api
 - **Swagger (hosted):** https://inventory-api-9nao.onrender.com/api/docs
-- **Database (Neon):** psql 'postgresql://neondb_owner:npg_sfKMU0i9Vgmw@ep-curly-butterfly-adieq7ve-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
-
 ---
 
 
