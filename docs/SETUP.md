@@ -69,20 +69,21 @@ Minimum required variables (from `.env.example`):
 ```env
 NODE_ENV=development
 DB_HOST=localhost
-DB_PORT=5433
+DB_PORT=5432
 DB_USERNAME=user
 DB_PASSWORD=admin123
 DB_DATABASE=inventory
 PORT=8080
 JWT_SECRET=some-long-random-secret
-DATABASE_URL=postgres://user:admin123@localhost:5433/inventory
+DATABASE_URL=postgres://user:admin123@localhost:5432/inventory
 
 JWT_ACCESS_EXPIRES=60m
 JWT_REFRESH_EXPIRES=7d
 ```
 
 Notes:
-- Default Postgres port is usually `5432`. This project’s example uses `5433`. Adjust to your local setup.
+- Default Postgres port is `5432` and this project’s example uses `5432`.
+- If your local Postgres runs on a different port, update `DB_PORT` and the `DATABASE_URL` example accordingly.
 - `DATABASE_URL` should match the individual DB_* values.
 - Use a strong `JWT_SECRET` in all environments.
 
@@ -113,7 +114,7 @@ GRANT ALL PRIVILEGES ON DATABASE inventory TO "user";
 - Windows (psql via PgAdmin or Command Prompt):
   - Open SQL query tool and run the same SQL statements above.
 
-If you prefer port `5432`, update both `.env` and your `DATABASE_URL` accordingly.
+If your Postgres uses a different port, update both `.env` and your `DATABASE_URL` accordingly.
 
 ---
 

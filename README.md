@@ -32,7 +32,8 @@ This project is a RESTful API for an e-commerce inventory system built with Nest
   ```bash
   npm install
   ```
-3. Prefer a detailed, cross-platform guide? See `docs/SETUP.md`.
+3. Configure environment variables and local database:
+   - See [Local DB Setup Guide](docs/SETUP.md) for detailed instructions on creating the Postgres user, database, and running migrations.
 4. Configure environment variables
 
   Local (.env):
@@ -40,21 +41,25 @@ This project is a RESTful API for an e-commerce inventory system built with Nest
   # Option A: connection params
   DB_HOST=localhost
   DB_PORT=5432
-  DB_USERNAME=postgres
-  DB_PASSWORD=postgres
+  DB_USERNAME=user
+  DB_PASSWORD=admin123
   DB_DATABASE=inventory
 
   # Option B: single URL (overrides the above if set)
-  # DATABASE_URL=postgres://user:pass@host:5432/dbname
+  # DATABASE_URL=postgres://user:admin123@localhost:5432/inventory
 
   # Auth
   JWT_SECRET=your-access-token-secret
   JWT_REFRESH_SECRET=your-refresh-token-secret
+  JWT_ACCESS_EXPIRES=60m
+  JWT_REFRESH_EXPIRES=7d
 
   # App
   PORT=8080
   NODE_ENV=development
   ```
+
+  **Note:** 5432 is the default PostgreSQL port on most systems. If your local PostgreSQL runs on a different port, update `DB_PORT` (and the `DATABASE_URL` example) accordingly.
 
   Hosted (Render env vars):
   - Set `DATABASE_URL` to your Neon connection string (with SSL), e.g. `postgres://user:pass@host/neondb?sslmode=require`
@@ -92,7 +97,7 @@ Swagger UI is available at: `http://localhost:8080/api/docs`
 
 ## Live Demo
 
-- **Backend (Render):** https://inventory-api-9nao.onrender.com
+- **Backend (Render):** https://inventory-api-9nao.onrender.com/api
 - **Swagger (hosted):** https://inventory-api-9nao.onrender.com/api/docs
 - **Database (Neon):** psql 'postgresql://neondb_owner:npg_sfKMU0i9Vgmw@ep-curly-butterfly-adieq7ve-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
 
