@@ -1,26 +1,4 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
-
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
-
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
-
+ 
 ## E-Commerce Inventory API
 
 This project is a RESTful API for an e-commerce inventory system built with NestJS, TypeScript, and PostgreSQL. It supports secure CRUD operations for products and categories, JWT-based user authentication, and product search. Optionally, product images can be uploaded and stored.
@@ -36,7 +14,7 @@ This project is a RESTful API for an e-commerce inventory system built with Nest
 - Optional: Product image upload
 
 ### Tech Stack
-- NestJS, TypeScript, PostgreSQL (Supabase/Neon), TypeORM
+- NestJS, TypeScript, PostgreSQL (Neon), TypeORM
 - JWT authentication
 - Swagger API docs
 
@@ -47,39 +25,76 @@ This project is a RESTful API for an e-commerce inventory system built with Nest
 
 1. Clone the repository:
   ```bash
-  git clone <your-github-repo-url>
+  git clone https://github.com/younos295/inventory-api
   cd inventory-api
   ```
 2. Install dependencies:
   ```bash
   npm install
   ```
-3. Configure environment variables in a `.env` file:
+3. Prefer a detailed, cross-platform guide? See `docs/SETUP.md`.
+4. Configure environment variables
+
+  Local (.env):
   ```env
-  DB_HOST=your-db-host
+  # Option A: connection params
+  DB_HOST=localhost
   DB_PORT=5432
-  DB_USERNAME=your-db-username
-  DB_PASSWORD=your-db-password
-  DB_DATABASE=your-db-name
-  JWT_SECRET=your-jwt-secret
+  DB_USERNAME=postgres
+  DB_PASSWORD=postgres
+  DB_DATABASE=inventory
+
+  # Option B: single URL (overrides the above if set)
+  # DATABASE_URL=postgres://user:pass@host:5432/dbname
+
+  # Auth
+  JWT_SECRET=your-access-token-secret
+  JWT_REFRESH_SECRET=your-refresh-token-secret
+
+  # App
+  PORT=8080
+  NODE_ENV=development
   ```
-4. Run database migrations (if using TypeORM CLI):
+
+  Hosted (Render env vars):
+  - Set `DATABASE_URL` to your Neon connection string (with SSL), e.g. `postgres://user:pass@host/neondb?sslmode=require`
+  - Set `JWT_SECRET` and `JWT_REFRESH_SECRET`
+  - Render sets `PORT` automatically; you may still set it explicitly if desired
+  - `NODE_ENV=production` (Render sets this by default)
+
+5. Run database migrations
   ```bash
-  npm run typeorm migration:run
+  # Local/dev
+  npm run migration:run
+
+  # Show migrations
+  npm run migration:show
+
+  # Production (after build)
+  npm run build && npm run migration:run:prod
   ```
-5. Start the server:
+
+6. Start the server
   ```bash
+  # Development (watch mode)
   npm run start:dev
+
+  # Production (assumes migrations already run)
+  npm run start:prod
+
+  # Production with auto-migration then start (useful on Render)
+  npm run start:prod:migrate
   ```
 
 ## API Documentation
 
-Swagger UI is available at: `http://localhost:3000/api/docs`
+Swagger UI is available at: `http://localhost:8080/api/docs`
 
 ## Live Demo
 
-- **Backend:** [Your Render/Vercel/Railway URL here]
-- **Database:** [Your Supabase/Neon URL here]
+- **Backend (Render):** https://inventory-api-9nao.onrender.com
+- **Swagger (hosted):** https://inventory-api-9nao.onrender.com/api/docs
+- **Database (Neon):** psql 'postgresql://neondb_owner:npg_sfKMU0i9Vgmw@ep-curly-butterfly-adieq7ve-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require'
 
 ---
 
@@ -121,9 +136,40 @@ $ npm run test:cov
 ```
 
 
-## Deployment & Hosting
+## Deployment & Hosting (Render + Neon)
 
-You can deploy the backend on Render, Vercel, or Railway (free tier). Host the PostgreSQL database on Supabase or Neon (free tier). Make sure both are publicly accessible.
+Follow these steps to deploy the API on Render and host the PostgreSQL database on Neon.
+
+1. Create a Neon database
+   - Create a Neon project and database
+   - Copy the connection string (include `?sslmode=require`)
+   - Optionally create a non-superuser for the app
+
+2. Prepare the repo for production
+   - Ensure migrations are generated and committed
+   - Confirm `src/data-source.ts` and `src/app.module.ts` read `DATABASE_URL` in production and enable SSL
+
+3. Create a Render Web Service
+   - Connect your GitHub repo
+   - Environment: Node
+   - Build Command: `npm install; npm run build`
+   - Start Command: `npm run start:prod:migrate`
+   - Add Environment Variables:
+     - `DATABASE_URL=postgres://user:pass@host/db?sslmode=require`
+     - `JWT_SECRET=your-access-secret`
+     - `JWT_REFRESH_SECRET=your-refresh-secret`
+     - (Optional) `PORT=8080` (Render sets this automatically)
+
+4. Run migrations in production
+   - Render Start Command uses `npm run start:prod:migrate` which runs migrations before the app boots
+
+5. Verify
+   - Open the Render URL: `https://your-render-service.onrender.com/api/docs` (Swagger)
+   - Test `POST /api/auth/register` and `POST /api/auth/login`
+
+Notes
+- In production (`NODE_ENV=production`), `synchronize` is disabled and SSL is enabled per `src/app.module.ts` and `src/data-source.ts`
+- Prefer `DATABASE_URL` in production; local can use either connection params or `DATABASE_URL`
 
 ---
 
